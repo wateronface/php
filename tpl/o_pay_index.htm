@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+		
+		//提交确认删除表单
+		$(".deletes").click(function(){
+			var count = $("input[name='chk_list[]']:checked").length;
+			if(count>0){
+				if(confirm("确定删除选中?")){
+					$('#form1').attr('action','<{spUrl c=o_pay_action a=deleteselect}>');
+		  			$('#form1')[0].submit();
+				}
+			}else{
+				alert("请勾选要删除的记录");
+			}
+		});
+		
+
+		$("#chk_btn").click(function(){
+			$("input[name='chk_list[]']").attr('checked', $(this).attr('checked')); 
+		});
+
+});
+</script>
+</head>
+<body>
+
+	<div class="place">
+	<span>位置：</span>
+    <ul class="placeul">
+    <li class="active"><a href="#">销货</a></li>
+    <li>收款记录</li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    	 <ul class="toolbar">
+        <!--a href="<{spUrl c=o_pay_action a=addform}>"><li><span><img src="images/t01.png" /></span>添加</li></a-->
+        <!--a href="#"><li class="updates"><span><img src="images/t02.png" /></span>修改</li></a-->
+        <a href="#"><li class="deletes"><span><img src="images/t03.png" /></span>删除</li></a>
+        
+        </ul>
+    	<ul class="toolbar1">
+        <!--li><span><img src="images/t05.png" /></span>设置</li-->
+        <form id="form_search"  action="<{spUrl c=o_pay_action a=index}>" method="post">
+	        <li style="padding-left:0px;padding-right:0px;" ><input name="search_key" type="text" class="dfinput short" value="<{$search_key}>" /></li>
+	        <li class="searchs"><a href="#"><span><img src="images/t06.png" /></span>筛选</a></li>
+        </form>
+        </ul>
+    </div>
+    
+    <form id="form1" action="<{spUrl c=o_pay_action a=deleteselect}>" method="post">
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input id="chk_btn" name="" type="checkbox" value=""/></th>
+        <th>订单编号</th>
+        <th>打款金额</th>
+        <th>打款时间</th>
+        <th>客户</th>
+        <th>录入人</th>
+        <th>录入时间</th>
+        <th>备注</th>
+        <th>所属</th>
+        </tr>
+        </thead>
+        <tbody  class="tbody">
+	        <{foreach from=$results item=a}>
+			    <tr>
+			        <td><input name="chk_list[]" type="checkbox" value="<{$a.id}>" /></td>
+			        <td><{$a.orderNo}></td>
+			        <td><{$a.money}></td>
+			        <td><{$a.payTime|date_format:'%Y-%m-%d'}></td>
+			        <td><{$a.unitName}></td>
+			        <td><{$a.username}></td>
+			        <td><{$a.updateTime}></td>
+			        <td><{$a.remark}></td>
+			        <td><{$a.who}></td>
+		        </tr> 
+	        <{/foreach}>
+        </tbody>
+    </table>
+    </form>
+   	<{if $pager}>
+    <div class="pagin">
+    	<div class="message">共<i class="blue"><{$pager.total_count}></i>条记录，当前第&nbsp;<i class="blue"><{$pager.current_page}>&nbsp;</i>页</div>
+        <ul class="paginList">
+	        <li class="paginItem"><a href="<{spUrl c=o_pay_action a=index page=$pager.first_page}>"><span class="pagepre"></span></a></li>
+	        
+	        <{foreach from=$pager.all_pages item=thepage}>
+	        <{if $thepage != $pager.current_page}>
+	                <li class="paginItem"><a href="<{spUrl c=o_pay_action a=index page=$thepage}>"><{$thepage}></a></li>
+	        <{else}>
+	                <li class="paginItem current"><a href="<{spUrl c=o_pay_action a=index page=$thepage}>"><{$thepage}></a></a></li>
+	        <{/if}>
+	        <{/foreach}>
+	        <li class="paginItem"><a href="<{spUrl c=o_pay_action a=index page=$pager.last_page}>"><span class="pagenxt"></span></a></li>
+        </ul>
+    </div>
+    <{/if}>
+    
+    
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+
+	</script>
+
+</body>
+
+</html>

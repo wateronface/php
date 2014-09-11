@@ -1,0 +1,20 @@
+1、找到X:\APMServ5.2.6\Apache\conf\httpd.conf
+2、找到
+
+#APMServ默认虚拟主机
+NameVirtualHost *:80
+<VirtualHost *:80>
+ ServerName *
+ DocumentRoot "D:/MyEclipse 8.6_workspace/oa"
+<Directory "D:/MyEclipse 8.6_workspace/oa"> 
+ Options FollowSymLinks IncludesNOEXEC Indexes
+ DirectoryIndex index.html index.htm default.htm index.php default.php index.cgi default.cgi index.pl default.pl index.shtml
+ AllowOverride All 
+ Order Deny,Allow 
+ Allow from all 
+</Directory>
+</VirtualHost>
+
+其中的D:/MyEclipse 8.6_workspace/oa就是改后的，两处
+
+3、重启生效

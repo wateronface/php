@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<link rel="stylesheet" type="text/css" href="js/form/style/validate.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/form/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/form/jquery.validate.js"></script>
+<script type="text/javascript" src="js/form/i18n/messages_cn.js"></script>
+
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+	
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">设置</a></li>
+    <li><a href="<{spUrl c=user_action a=index}>">系统用户</a></li>
+    <li><{if $action=="add"}>添加<{else}>修改<{/if}>系统用户</li>
+    </ul>
+    </div>
+    
+    <div class="formbody">
+    
+    <div class="formtitle"><span><{if $action=="add"}>添加<{else}>修改<{/if}>用户</span></div>
+	    <form id="form1" action="<{if $action=="add"}><{spUrl c=user_action a=addsave}><{else}><{spUrl c=user_action a=updatesave}><{/if}>"  method=POST onsubmit="return $('#form1').validate().form();">
+		    <ul class="forminfo">
+		     <input name="id" type="hidden" value="<{$user['id']}>" class="{required:true,maxlength:50} dfinput "/>
+		    <li><label>用户名</label><input name="username"  value="<{$user['id']}>" type="text" class="{required:true,maxlength:50} dfinput "/></li>
+		    <li><label>密码</label><input name="password"  value="<{$user['password']}>"  type="text" class="{required:true,maxlength:50} dfinput " /></li>
+		    <li><label>角色</label><input name="role" type="text"  value="<{$user['role']}>"  class="{required:true,maxlength:50} dfinput " /></li>
+		    <li><label>&nbsp;</label><input name="" type="submit" class="btn" value="确认保存"/></li>
+		    </ul>
+	    </form>
+    
+    </div>
+
+
+</body>
+
+</html>

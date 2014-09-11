@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="js/form/style/validate.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/form/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/form/jquery.validate.js"></script>
+<script type="text/javascript" src="js/form/i18n/messages_cn.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+
+<script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+</head>
+
+<body>
+<script>
+
+
+</script>
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">进货</a></li>
+    <li><a href="<{spUrl c=i_order_action a=index}>">订单</a></li>
+    <li>添加打款记录</li>
+    </ul>
+    </div>
+    
+    <div class="formbody">
+    
+    <div class="formtitle"><span>添加打款记录</span></div>
+
+	    <form id="form1" action="<{spUrl c=i_pay_action a=addsave}>" method=POST onsubmit="return $('#form1').validate().form();">
+		    <ul class="forminfo">
+		    <li><label>金额</label><input id="money" name="money" type="text" class="{required:true,number:true,maxlength:50} dfinput " /></li>
+		    <li><label>打款时间</label><input id="payTime" name="payTime" type="text" class="{required:true,dateISO:true} dfinput " readonly="readonly" onClick="WdatePicker()" /></li>
+		    <li><label>备注</label><textarea id="remark" name="remark" cols="" rows="" class="textinput" maxlength="300"></textarea></li>
+		    <li><label>&nbsp;</label><input type="submit" id="btn_submit" class="btn" value="确认保存"/></li>
+		    <input type=hidden id="orderId" name="orderId" value="<{$order.id}>" />
+		    </ul>
+	    </form>
+
+				    
+
+    
+    </div>
+
+    
+
+</body>
+
+</html>

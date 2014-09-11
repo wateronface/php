@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="js/form/style/validate.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/form/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/form/jquery.validate.js"></script>
+<script type="text/javascript" src="js/form/i18n/messages_cn.js"></script>
+        
+
+<script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+
+        
+</head>
+
+<body>
+<script>
+	var currentListType = 0;//0-货品列表 1-供应商列表
+	var productArray=[],productArraySelected = [];
+	var unitArray=[],unitArraySelected = [];
+
+	var productDetail=[];
+
+	 <{foreach from=$products item=a}>
+	 	var product = new Object();
+	 	product.id = <{$a.id}>;
+	 	product.name = '<{$a.name}>';
+	    productArray.push(product);
+    <{/foreach}>
+	<{foreach from=$units item=a}>
+	 	var unit = new Object();
+	 	unit.id = <{$a.id}>;
+	 	unit.name = '<{$a.unitName}>';
+	    unitArray.push(unit);
+    <{/foreach}>
+	<{foreach from=$productDetailList item=a}>
+	 	var detail = new Object();
+	 	detail.id = <{$a.id}>;
+	 	detail.name = '<{$a.name}>';
+	 	detail.price = '<{$a.price}>';
+	 	detail.amount = '<{$a.amount}>';
+	    productDetail.push(detail);
+    <{/foreach}>
+	$(function(){
+		//将productArray显示到右侧
+		render_product_array();
+		
+		if('<{$action}>'=='update'){
+			
+			//如果是修改模式下,显示供应商名称
+			unitId = '<{$i_order['unitId']}>';
+			for(var i=0;i<unitArray.length;i++){
+				if(unitArray[i].id==unitId){
+					var obj = unitArray[i];
+					var item = '<li id='+obj.id+' name="'+obj.name+'">'+obj.name+'</li>';
+		   			 $('#unit').empty();
+		    		$('#unit').append($(item));
+				}
+			}
+			//如果是修改模式下,显示货品列表
+			for(var i=0;i<productDetail.length;i++){
+				var obj = productDetail[i];
+				for(var j=0;j<productArray.length;j++){
+					if(obj.id==productArray[j].id){
+						productArray.splice(j,1);
+						var product = new Object();
+		 				product.id = obj.id;
+		 				product.name = obj.name;
+		   				productArraySelected.push(product);
+						var item = '<li id='+obj.id+' name="'+obj.name+'">'+obj.name+'(<input class="amount" type=text value="'+obj.price+'">) x <input class="amount" type=text value="'+obj.amount+'" > <a href="#" onclick="removeOne(this)"><i>-</i></a></li>';
+						$('.dfinput-select').append($(item));
+					}
+				}
+			}
+			render_product_array();
+		}
+		
+		
+		//提交表单
+		$('#btn_submit').click(function(){
+			var unitId = $($('#unit').children()).attr("id");
+			//加入unitId
+			$('#submit_unit').val(unitId);
+			
+			var lis = $('.dfinput-select').children();
+			var detail="";
+			for(var i=0;i<lis.length;i++){
+				if(i>0){
+					detail = detail+"@@@";
+				}
+				var productId = $(lis[i]).attr('id');
+				var price = $($(lis[i]).children()).first().val();
+				var amount = $($(lis[i]).children()).first().next().val();
+				detail = detail+productId+"___"+price+"___"+amount;
+			}
+			$('#submit_detail').val(detail);
+			$('#form1')[0].submit();
+		});
+		
+	});
+	function getCurrentDate(){
+		var date=new Date;
+		 var year=date.getFullYear(); 
+		 var month=date.getMonth()+1;
+		 month =(month<10 ? "0"+month:month); 
+		 var day = date.getDate();
+		 day =(day<10 ? "0"+day:day); 
+	     return year+'-'+month+'-'+day;
+	} 
+	//显示货品列表
+	function show_product_list(){
+		$('#dateWidgetContainer').hide();
+		$('#obj_filter').show();
+		$('.obj_items').show();
+		$("#list_title").html("货品列表(单击添加至订单)");
+		render_product_array();
+		currentListType = 0;
+	}
+	//显示供应商列表
+	function show_unit_list(){
+		$('#dateWidgetContainer').hide();
+		$('#obj_filter').show();
+		$("#list_title").html("供应商列表(单击添加至订单)");
+		render_unit_array();
+		currentListType = 1;
+	}
+	//点击弹出一个加入左侧
+	function addOne(obj){
+		if(currentListType == 0){
+			for(var i=0;i<productArray.length;i++){
+				if(obj.id==productArray[i].id){
+					productArray.splice(i,1);
+				}
+			}
+			var product = new Object();
+		 	product.id = obj.id;
+		 	product.name = obj.name;
+		    productArraySelected.push(product);
+			var item = '<li id='+obj.id+' name="'+obj.name+'">'+obj.name+'(<input class="amount" type=text value="单价">) x <input class="amount" type=text value="数量" ><a href="#" onclick="removeOne(this)"><i>-</i></a></li>';
+			$('.dfinput-select').append($(item));
+			render_product_array();
+		}else{
+			var item = '<li id='+obj.id+' name="'+obj.name+'">'+obj.name+'</li>';
+		    $('#unit').empty();
+		    $('#unit').append($(item));
+		}
+
+	}
+	//释放一个到右侧
+	function removeOne(obj){
+		obj = $(obj).parent();
+		
+		var product = new Object();
+	 	product.id = obj.attr('id')
+	 	product.name = obj.attr('name');
+	 	productArray.push(product);
+		for(var i=0;i<productArraySelected.length;i++){
+			if(obj.id==productArraySelected[i].id || productArray){
+				productArraySelected.splice(i,1);
+			}
+		}
+		obj.remove();
+		render_product_array();
+	}
+	//初始化货品列表
+	function render_product_array(){
+		$('.obj_items').empty();
+		for(var i=0;i<productArray.length;i++){
+			$('.obj_items').append('<a href="javascript:void(0)" id="'+productArray[i].id+'" name="'+productArray[i].name+'" onclick=addOne(this)><li>'+productArray[i].name+'</li></a>');
+		}
+	}
+	//初始化供应商列表
+	function render_unit_array(){
+		$('.obj_items').empty();
+		for(var i=0;i<unitArray.length;i++){
+			$('.obj_items').append('<a href="javascript:void(0)" id="'+unitArray[i].id+'" name="'+unitArray[i].name+'" onclick=addOne(this)><li>'+unitArray[i].name+'</li></a>');
+		}
+	}
+	
+	//筛选
+	function filter(){
+		var key = $('#filter_key').val();
+		var lis = $('.obj_items').children();
+		for(var i=0;i<lis.length;i++){
+			if($(lis[i]).attr('name').indexOf(key)<0){
+				$(lis[i]).hide();
+			}else{
+				$(lis[i]).show();
+			}
+		}
+	}
+</script>
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">进货</a></li>
+    <li><a href="<{spUrl c=i_order_action a=index}>">订单</a></li>
+    <li><{if $action=="add"}>添加<{else}>修改<{/if}>订单</li>
+    </ul>
+    </div>
+    
+    <div class="formbody">
+    
+    <div class="formtitle"><span><{if $action=="add"}>添加<{else}>修改<{/if}>订单</span></div>
+
+	    <form id="form1" action="<{if $action=="add"}><{spUrl c=i_order_action a=addsave}><{else}><{spUrl c=i_order_action a=updatesave}><{/if}>" method=POST onsubmit="return $('#form1').validate().form();">
+		    <ul class="forminfo">
+		    <input type=hidden name="id" value="<{$i_order['id']}>" />
+		    <li><label>订单编号</label><input id="orderNo" name="orderNo"  value="<{$i_order['orderNo']}>" type="text" class="{required:true,maxlength:50} dfinput" maxlength="30" /></li>
+		    <li><label>所属公司</label><cite><input id="who" name="who" type="radio" value="1" checked="checked" />森大&nbsp;&nbsp;&nbsp;&nbsp;<input name="who" type="radio" value="2" <{if $i_order['who']==2}>checked="checked"<{/if}> />碧海洋</cite></li>
+
+		    <li ><label>货品列表<br>品名(单价)*数量</label>
+		    
+		    <ul class="dfinput-select">
+		    
+		    </ul>
+		    
+		    &nbsp;&nbsp;<a href="#" onclick="show_product_list()"><em class="choose">...</em></a></li>
+		    
+		    <li><label>供应商</label><div id="unit" type="text" class="{required:true,maxlength:50} dfinput-single" ></div>&nbsp;&nbsp;<a href="#" onclick="show_unit_list()"><em class="choose">...</em></a></li>
+		    <li><label>订单时间</label><input id="orderTime" name="orderTime" type="text" class="{required:true,dateISO:true} dfinput" readonly="readonly" onClick="WdatePicker()" value="<{$i_order['orderTime']|date_format:'%Y-%m-%d'}>" /></li>
+		    <li><label>备注</label><textarea id="remark" name="remark" cols="" rows="" class="textinput" maxlength="300"><{$i_order['remark']}></textarea></li>
+		    <li><label>&nbsp;</label><input type="button" id="btn_submit" class="btn" value="确认保存"/></li>
+		    <input type=hidden id="submit_unit" name="unitId" />
+		    <input type=hidden id="submit_detail" name="detail" />
+		    </ul>
+	    </form>
+
+				    
+
+    
+    </div>
+
+    <div class="objectlist">
+    	<div class="tiptop"><span id="list_title">货品列表(单击添加至订单)</span></div>
+      <div class="objectlistcontent">
+
+      <div id="obj_filter">	<input name="no" id="filter_key" type="text" class="dfinput" style="width:190px;" />
+      <a href="#" onclick="filter()">
+      <span class="filter">筛选</span></a></div>
+        <ul class="obj_items"></ul>
+    
+    </div>
+    
+
+</body>
+
+</html>

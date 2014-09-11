@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<link rel="stylesheet" type="text/css" href="js/form/style/validate.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/form/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/form/jquery.validate.js"></script>
+<script type="text/javascript" src="js/form/i18n/messages_cn.js"></script>
+
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+	
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">设置</a></li>
+    <li><a href="<{spUrl c=product_action a=index}>">货品列表</a></li>
+    <li><{if $action=="add"}>添加<{else}>修改<{/if}>货品</li>
+    </ul>
+    </div>
+    
+    <div class="formbody">
+    
+    <div class="formtitle"><span><{if $action=="add"}>添加<{else}>修改<{/if}>货品</span></div>
+	    <form id="form1" action="<{if $action=="add"}><{spUrl c=product_action a=addsave}><{else}><{spUrl c=product_action a=updatesave}><{/if}>"  method=POST onsubmit="return $('#form1').validate().form();">
+		    <ul class="forminfo">
+		    <input name="id" type="hidden" value="<{$product['id']}>" class="{required:true,maxlength:50} dfinput "/>
+		    <li><label>货品编号</label><input name="no" type="text" value="<{$product['no']}>" class="{required:true,maxlength:50} dfinput "/></li>
+		    <li><label>名称</label><input name="name" type="text" value="<{$product['name']}>" class="{required:true,maxlength:50} dfinput " /></li>
+		    <li><label>规格</label><input name="spec" type="text" value="<{$product['spec']}>" class="{required:false,maxlength:50} dfinput " /></li>
+		    <li><label>单位</label><input name="unit" type="text" value="<{$product['unit']}>" class="{required:true,maxlength:50} dfinput " /></li>
+		    <li><label>初始库存</label><input name="init" type="text" class="{required:true,digits:true,max:10000000} dfinput " value="<{$product['init']}>" /></li>
+		    <li><label>备注</label><textarea name="remark" cols="" rows="" class="{required:false,maxlength:300} textinput "><{$product['remark']}></textarea></li>
+		    <li><label>&nbsp;</label><input name="" type="submit" class="btn" value="确认保存"/></li>
+		    </ul>
+	    </form>
+    
+    </div>
+
+
+</body>
+
+</html>

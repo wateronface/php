@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<link rel="stylesheet" type="text/css" href="js/form/style/validate.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/form/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/form/jquery.validate.js"></script>
+<script type="text/javascript" src="js/form/i18n/messages_cn.js"></script>
+
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+	
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">设置</a></li>
+    <li><a href="<{spUrl c=unit_action a=index}>"><{if $smarty.get.type == 0}>供应商 <{else}>客户<{/if}></a></li>
+    <li><{if $action=="add"}>添加<{else}>修改<{/if}><{if $smarty.get.type == 0}>供应商 <{else}>客户<{/if}></li>
+    </ul>
+    </div>
+    
+    <div class="formbody">
+    
+    <div class="formtitle"><span><{if $action=="add"}>添加<{else}>修改<{/if}><{if $smarty.get.type == 0}>供应商 <{else}>客户<{/if}></span></div>
+	    <form id="form1" action="<{if $action=="add"}><{spUrl c=unit_action a=addsave}><{else}><{spUrl c=unit_action a=updatesave}><{/if}>"  method=POST onsubmit="return $('#form1').validate().form();">
+	    	<input name="type" type="hidden" value="<{$smarty.get.type}>">
+		    <ul class="forminfo">
+		    <input name="id" type="hidden" value="<{$unit['id']}>" class="{required:true,maxlength:50} dfinput "/>
+		    <li><label>名称</label><input name="unitName"  value="<{$unit['unitName']}>" type="text" class="{required:true,maxlength:100} dfinput "/></li>
+		    <li><label>编码</label><input name="unitCode"  value="<{$unit['unitCode']}>" type="text" class="{required:false,maxlength:50} dfinput " /></li>
+		    <li><label>地址</label><input name="unitAddress"  value="<{$unit['unitAddress']}>" type="text" class="{required:false,maxlength:100} dfinput " /></li>
+		    <li><label>联系人</label><input name="unitPeople"  value="<{$unit['unitPeople']}>" type="text" class="{required:false,maxlength:50} dfinput " /></li>
+		    <li><label>联系电话</label><input name="unitPhone" value="<{$unit['unitPhone']}>" type="text" class="{required:false,maxlength:30} dfinput " /></li>
+		    <li><label>备注</label><textarea name="remark" cols="" rows="" class="{required:false,maxlength:300} textinput "><{$unit['remark']}></textarea></li>
+		    <li><label>&nbsp;</label><input name="" type="submit" class="btn" value="确认保存"/></li>
+		    </ul>
+	    </form>
+    
+    </div>
+
+
+</body>
+
+</html>
